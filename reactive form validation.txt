@@ -1,0 +1,267 @@
+project for Reactive Forms Validation using Angular 12. In this demo project, we create a simple registration form with some standard fields for user name, user email, password, and confirm password. We will cover all validations like field required, email, length, and match.
+Prerequisite
+•	Angular 12
+•	HTML/Bootstrap
+First of all we have created a project using the following command in the Command Prompt,
+ng new formValidation
+Open project in visual code studio using following command,
+cd formvalidation
+code .
+
+First of all we need to import ReactiveFormsModule in App-Module like the below code.
+App.Module.ts
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms';
+
+import { AppComponent } from './app.component';
+
+@NgModule({
+  imports: [BrowserModule, ReactiveFormsModule],
+  declarations: [AppComponent],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+Now we need to create React-form in angular so we need some dependencies in app,component.ts like FormBuilder, FormGroup,Validators.
+So in App Component we will define form fields and validator for our from using formbuilder. To define fields and validator we should import the following dependencies on top of the app component.ts.
+import { FormBuilder, FormGroup } from '@angular/forms';
+JavaScript
+Copy
+and create an instance of FormBuilder in constructor of app component like as below,
+constructor(private formBuilder: FormBuilder) { }
+JavaScript
+Copy
+ now we will create form in app component.ts like as below code.
+form = this.formBuilder.group({
+            fullname: [''],
+            username: ['']);
+JavaScript
+Copy
+now we need to use this form in HTML like below,
+We need to use FromGroup directive to define form in HTML and use formControlName to define control name. 
+<form [formGroup]="form">
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" formControlName="fullname" class="form-control" />
+    </div>
+
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" formControlName="username"
+        class="form-control"/>
+    </div>
+</div>
+To apply validation we need to import some dependency for validation like 
+import {AbstractControl, Validators } from '@angular/forms';
+JavaScript
+Copy
+you can write custom validator like as below code using AbstractControl, ValidatorFn :
+import { AbstractControl, ValidatorFn } from '@angular/forms';
+
+export default class Validation {
+  static match(controlName: string, checkControlName: string): ValidatorFn {
+    return (controls: AbstractControl) => {
+      const control = controls.get(controlName);
+      const checkControl = controls.get(checkControlName);
+
+      if (checkControl.errors && !checkControl.errors.matching) {
+        return null;
+      }
+
+      if (control.value !== checkControl.value) {
+        controls.get(checkControlName).setErrors({ matching: true });
+        return { matching: true };
+      } else {
+        return null;
+      }
+    };
+  }
+}
+JavaScript
+Copy
+app.component.ts
+import { Component, OnInit } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators
+} from '@angular/forms';
+import Validation from './utils/validation';
+
+@Component({
+  selector: 'my-app',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {
+  form: FormGroup;
+  submitted = false;
+
+  constructor(private formBuilder: FormBuilder) {}
+
+  ngOnInit(): void {
+    this.form = this.formBuilder.group(
+      {
+        fullname: ['', Validators.required],
+        username: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(6),
+            Validators.maxLength(20)
+          ]
+        ],
+        email: ['', [Validators.required, Validators.email]],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(6),
+            Validators.maxLength(40)
+          ]
+        ],
+        confirmPassword: ['', Validators.required],
+        acceptTerms: [false, Validators.requiredTrue]
+      },
+      {
+        validators: [Validation.match('password', 'confirmPassword')]
+      }
+    );
+  }
+
+  get f(): { [key: string]: AbstractControl } {
+    return this.form.controls;
+  }
+
+  onSubmit(): void {
+    this.submitted = true;
+
+    if (this.form.invalid) {
+      return;
+    }
+
+    console.log(JSON.stringify(this.form.value, null, 2));
+  }
+
+  onReset(): void {
+    this.submitted = false;
+    this.form.reset();
+  }
+}
+JavaScript
+Copy
+App.Component.html
+<div class="register-form">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>Full Name</label>
+      <input
+        type="text"
+        formControlName="fullname"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.fullname.errors }"/>
+      <div *ngIf="submitted && f.fullname.errors" class="invalid-feedback">
+        <div *ngIf="f.fullname.errors.required">Fullname is required</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Username</label>
+      <input
+        type="text"
+        formControlName="username"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.username.errors }"/>
+      <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+        <div *ngIf="f.username.errors.required">Username is required</div>
+        <div *ngIf="f.username.errors.minlength">
+          Username must be at least 6 characters
+        </div>
+        <div *ngIf="f.username.errors.maxlength">
+          Username must not exceed 20 characters
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input
+        type="text"
+        formControlName="email"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.email.errors }"/>
+      <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+        <div *ngIf="f.email.errors.required">Email is required</div>
+        <div *ngIf="f.email.errors.email">Email is invalid</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input
+        type="password"
+        formControlName="password"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.password.errors }"/>
+      <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+        <div *ngIf="f.password.errors.required">Password is required</div>
+        <div *ngIf="f.password.errors.minlength">
+          Password must be at least 6 characters
+        </div>
+        <div *ngIf="f.password.errors.maxlength">
+          Username must not exceed 40 characters
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input
+        type="password"
+        formControlName="confirmPassword"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"/>
+      <div
+        *ngIf="submitted && f.confirmPassword.errors"
+        class="invalid-feedback">
+        <div *ngIf="f.confirmPassword.errors.required">
+          Confirm Password is required
+        </div>
+        <div *ngIf="f.confirmPassword.errors.matching">
+          Confirm Password does not match
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group form-check">
+      <input
+        type="checkbox"
+        formControlName="acceptTerms"
+        class="form-check-input"
+        [ngClass]="{ 'is-invalid': submitted && f.acceptTerms.errors }"/>
+      <label for="acceptTerms" class="form-check-label"
+        >I have read and agree to the Terms</label>
+      <div *ngIf="submitted && f.acceptTerms.errors" class="invalid-feedback">
+        Accept Terms is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">Register</button>
+      <button
+        type="button"
+        (click)="onReset()"
+        class="btn btn-warning float-right">
+        Reset
+      </button>
+    </div>
+  </form>
+</div>
+Markup
+Copy
+Let's start the project using the following command:
+npm start
+
+ 
+
