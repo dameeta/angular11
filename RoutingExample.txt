@@ -16,7 +16,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { ProdListComponent } from './prod-list/prod-list.component';
-import { appRoutes } from './routerConfig';
+import appRoutes from './routerConfig';
 @NgModule({
   imports: [BrowserModule,
     RouterModule.forRoot([{path: 'home',component: HomeComponent},
@@ -33,7 +33,9 @@ export class AppModule {}
 home.component.html
 <p>home works!</p>
 <p>{{homecomponent}}</p>
-===============================================
+
+========================================
+==============================================
 home.component.ts
 
 import { Component, OnInit } from '@angular/core';
@@ -75,8 +77,38 @@ export class ProdListComponent implements OnInit {
 
 }
 
-  
+ =====================================
+ appRoutes.ts
 
+
+import { Routes } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { ProdListComponent } from './prod-list/prod-list.component';
+
+const appRoutes: Routes = [
+  { path: 'home', 
+    component: HomeComponent 
+  },
+  {
+    path: 'prod-list',
+    component: ProdListComponent
+  },
+  
+];
+export default appRoutes;
+===================================================================
+app.component.html
+
+<div style="text-align:center">
+  <h1>
+    Welcome to {{title}}!!
+  </h1>
+  <nav>
+    <a routerLink="home" routerLinkActive="active">Home</a>
+    <a routerLink="prod-list">Product-List</a>
+  </nav>
+  <router-outlet></router-outlet>
+</div>
 
   
  
