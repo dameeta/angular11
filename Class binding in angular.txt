@@ -1,0 +1,214 @@
+Class binding with ClassName
+The ClassName is the property name of HTML Element. Hence we can make use of Property binding to assign the class name to any HTML element.
+
+The following example assigns CSS Class red to the div element.
+
+ 
+<div [className]="'red'">Test</div>
+ 
+You can also add more than one class by separating them using the
+
+ 
+<div [className]="'red size20'">Test</div>
+ 
+HTML Class attribute
+You can also add class using the normal HTML way.
+
+ 
+<div class="red">red</div>
+ 
+but, mixing both class and [className] results in removal of class attribute. You cannot use both.
+
+
+<div class="red" [className]="'size20'">red</div>
+ 
+
+
+Conditionally apply Classes
+We can also bind the class name dynamically.
+
+To do that first create a variable in your component class.
+
+ 
+cssStringVar: string= 'red size20';
+ 
+And then use it in the Template as shown below.
+
+ 
+<div [className]="cssStringVar">Test</div>
+ 
+You can create a function, which returns the class based on some condition.
+
+ 
+getClass() {
+  return 'red';
+}
+ 
+and then use it in the template as shown below.
+
+ 
+<div [className]="getClass()">getClass</div>
+ 
+The following example uses the Conditional (Ternary) Operator.
+
+ 
+<div [className]="hasError() ? 'red' : 'size20'"> conditonal operator </div>
+ 
+Class binding with Class
+There are another shorthand way to bind CSS Class to HTML element.
+
+
+<div [class.<className>]="condition"></div>
+ 
+Where
+
+className is name of the class, which you want to bind to.
+
+condition must return true or false. A return value of true adds the class and a false removes the class.
+
+In the following example, the class red and size20 is added to the div element.
+
+ 
+<div [class.red]="true" [class.size20]="true">Test</div>
+ 
+Conditionally binding class
+To dynamically or conditionally bind a class, First create a variable in the component class as shown below.
+
+ 
+ hasError:false;
+ 
+ 
+<div [class.red]="hasError" [class.size20]="hasError">Test</div>
+ 
+You can also create a function hasError(), which should return true or false as shown below.
+
+ 
+hasError() {
+   return false
+}
+ 
+And use it in the template as shown below.
+
+<div [class.red]="hasError()" [class.size20]="hasError()">Test</div>
+ 
+Class binding with NgClass
+Another way to add class is to use the NgClass directive. It is offers a more flexibility, like easily adding multiple classes etc.
+
+NgClass
+The ngClass directive adds and removes CSS classes on an HTML element. The syntax of the ngClass is as shown below.
+
+ 
+<element [ngClass]="expression">...</element>
+ 
+Where
+
+element is the DOM element to which class is being applied
+
+expression is evaluated and the resulting classes are added/removed from the element. The expression can be in various formats like string, array or an object. Let us explore all of them with example
+
+NgClass with a String
+You can use the String as expression and bind it to directly to the ngClass attribute. If you want to assign multiple classes, then separate each class with space as shown below.
+
+ 
+<element [ngClass]="'cssClass1 cssClass2'">...</element>
+ 
+Example
+Add the following classes to the app.component.css
+
+ 
+.red { color: red; }
+.size20 { font-size: 20px; }
+ 
+Add the following to the app.template.html
+
+ 
+<div [ngClass]="'red size20'"> Red Text with Size 20px </div>
+ 
+The above example code adds the two CSS Classes red & size20 to the div element.
+
+You can also use the ngClass without a square bracket. In that case, the expression is not evaluated but assigned directly to the class attribute. We also need to remove the double quote around the expression as shown below.
+
+ 
+<div class="row">     
+    <div ngClass='red size20'>Red Text with Size 20px </div> 
+</div>
+ 
+NgClass with Array
+You can achieve the same result by using an array instead of a string as shown below. The syntax for ngClass array syntax is as shown below
+
+ 
+<element [ngClass]="['cssClass1', 'cssClass2']">...</element>
+ 
+Example
+All you need to change the template as shown below
+
+ 
+<div [ngClass]="['red','size20']">Red Text with Size 20px </div>
+ 
+NgClass with Object
+You can also bind the ngClass to an object. Each property name of the object acts as a class name and is applied to the element if it is true. The syntax is as shown below
+
+ 
+<element [ngClass]="{'cssClass1': true, 'cssClass2': true}">...</element>
+ 
+Example of objects as CSS Classes
+
+ 
+<div class="row">     
+  <div [ngClass]="{'red':true,'size20':true}">Red Text with Size 20px</div>
+</div>
+ 
+In the above example, an object is bound to the ngClass. The object has two properties red and size20. The property name is assigned to the div element as a class name.
+
+Dynamically updating Class names
+We can dynamically change the CSS Classes from the component.
+
+Using strings
+To do that first create a string variable cssStringVar in your component code and assign the class names to it as shown below.
+
+ 
+cssStringVar: string= 'red size20';
+ 
+You can refer to the cssStringVar in your template as shown below
+
+ 
+<div class="row">     
+   <div [ngClass]="cssStringVar">Red Text with Size 20px : from component     </div> 
+</div>
+ 
+Using arrays
+Instead of string variable, you can create a array of string as shown below.
+
+ 
+cssArray:string[]=['red','size20']; 
+ 
+And, then use it in ngClass directive
+
+ 
+<div class="row">
+  <div [ngClass]="cssArray">
+    Red Text with Size 20px  : from CSS Array
+  </div>
+</div>
+ 
+Using JavaScript object
+Create a class as shown below in your component
+
+ 
+class CssClass {
+  red: boolean= true;
+  size20: boolean= true; 
+}
+ 
+Next, create the instance of the CssClass in the component as shown below. You can change the value of the property true as false dynamically
+
+
+cssClass: CssClass = new CssClass();
+ 
+And then refer to the cssClass in your template.
+
+ 
+<div class="row">     
+  <div [ngClass]="cssClass"> Red Text with Size 20px : from component as object</div> 
+</div>
+ 

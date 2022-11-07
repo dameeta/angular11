@@ -1,0 +1,108 @@
+Step 1 – Create New Angular App
+First of all, open your terminal and execute the following command on it to install angular app:
+
+ng new my-new-app
+Step 2 – Import Module
+Then, Open app.module.ts file and import HttpClientModule, FormsModule and ReactiveFormsModule to app.module.ts file like following:
+
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+    
+import { AppComponent } from './app.component';
+    
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+Step 3 – Add Code on View File
+In this step, create simple reactive form with input file element. So, visit src/app/app.component.html and update the following code into it:
+<h1>Angular 11 Reactive Forms Validation Example - </h1>
+   
+<form [formGroup]="form" (ngSubmit)="submit()">
+       
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input
+            formControlName="name"
+            id="name"
+            type="text"
+            class="form-control">
+        <div *ngIf="f.name.touched && f.name.invalid" class="alert alert-danger">
+            <div *ngIf="f.name.errors?.['required']">Name is required.</div>
+            <div *ngIf="f.name.errors?.['minlength']">Name should be 3 character.</div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input
+            formControlName="email"
+            id="email"
+            type="text"
+            class="form-control">
+        <div *ngIf="f.email.touched && f.email.invalid" class="alert alert-danger">
+            <div *ngIf="f.email.errors?.['required']">Email is required.</div>
+            <div *ngIf="f.email.errors?.['email']">Please, enter valid email address.</div>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="body">Body</label>
+        <textarea
+            formControlName="body"
+            id="body"
+            type="text"
+            class="form-control">
+        </textarea>
+        <div *ngIf="f.body.touched && f.body.invalid" class="alert alert-danger">
+            <div *ngIf="f.body.errors?.['required']">Body is required.</div>
+        </div>
+    </div>
+   
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+
+Step 4 – Use Component ts File
+In this step, visit the src/app directory and open app.component.ts. Then add the following code like formGroup and formControl element on component.ts file:
+
+import { Component } from '@angular/core';
+import { FormGroup, FormControl, Validators} from '@angular/forms';
+   
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+   
+  form = new FormGroup({
+    name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    body: new FormControl('', Validators.required)
+  });
+   
+  get f(){
+    return this.form.controls;
+  }
+   
+  submit(){
+    console.log(this.form.value);
+  }
+   
+}
+
+Step 5 – Start Angular App
+In this step, execute the following command on terminal to start angular app:
+
+ng serve

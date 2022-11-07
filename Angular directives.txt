@@ -1,0 +1,174 @@
+What is Angular Directive?
+The Angular directive extends HTML elements with new attributes. Angular has it's own set of directives like NgIf, NgFor, NgClass, NgStyle which offer great functionality to Angular application.
+
+
+You can create Directives when you are looking for a reusable HTML component, a reusable HTML behavior. The directives function can provide extra functionality to the DOM element.
+
+The naming convention for Angular Directives is ng and purpose of directive like ng-model, ng-bind.
+
+Types of Angular Directives
+Component
+The Angular component is more than a directive with a template. Everything you do with a directive, you can also do it with Component but not everything you do with Component is possible with a directive. These are also called as self-contained directives. Component directives are most commonly used directive in Angular projects.
+
+Below is an example of Angular Template
+
+@Component ({
+  selector: 'app-product',
+  template: <h1>Hello, this is the example of Angular Component</h1>
+})
+
+export class AppComponent{
+
+
+}
+You can create an Angular application using Node and Visual Studio Code. Check the following default files from Angular project which creates a component. app.component.css has all CSS, styles related to the component. app.component.html has all HTML to display details of the component. app.component.ts has all code required to control component behavior.
+
+Following code is from index.html which bootstrap app component by <app-root>. This <app-root> is defined in app.component.ts.
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>AngularApplication 123</title>
+        <base href="/">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
+    </head>
+    <body>
+        <app-root></app-root>
+    </body>
+</html>
+                
+@Component decorator is defined in app.component.ts typescript file. It has following code to control app component behavior.
+
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'AngularApplication';
+}
+
+Notice selector property of @component, it's value is mentioned in index.html to bootstrap or initialize application using this component.
+
+Structural Directives
+You can design or redesign DOM layout using Structural Directives. *ngIf, *ngFor, *ngElse are most used Structural Directives, it's behavior is conditional.
+
+Structural Directives are applied to the host element, the directive then changes host element's and it's descendendts behavior. These are precedes with an asterisk(*) like *ngIf.
+
+You may go through where Angular Component is created. It displays values from Array in tabular format. The array has properties like ProductID, ProductName, Price, AvailableQty, ReorderQty.
+
+Following code is used in angular components to display Products. This lists Product properties like ProductID, ProductName, Price. It uses structural attribute *ngIf to check if Products Array is not null and it has Product details. It also uses *ngFor to iterate through Products Array.
+
+<div class="container">  
+<div class="table-responsive">            
+<table class="table table-striped" *ngIf='products && products.length'>  
+<thead class="thead-dark">  
+    <tr>          
+        <th>ProductID</th>  
+        <th>ProductName</th>  
+        <th>CategoryId</th>         
+        <th>AvilableQty</th>  
+        <th>ReorderQty</th>         
+    </tr>  
+</thead>  
+<tbody>  
+    <tr *ngFor='let product of products'>  
+        <td>{{product.ProductID}}</td>  
+        <td>{{product.ProductName}}</td>  
+        <td>{{product.CategoryId}}</td>  
+        <td>{{product.AvilableQty}}</td>  
+        <td>{{product.ReorderQty}}</td>  
+    </tr>  
+</tbody>  
+</table>  
+<div>  
+</div>  
+
+Code from products.component.ts. It defines an array of Products.
+
+import { Component } from '@angular/core';    
+    
+@Component({    
+    selector: 'products-App',    
+    templateUrl: './products.component.html',      
+})    
+export class AppComponent {    
+    products: any[] = [    
+        {    
+            ProductID: '1', ProductName: 'Solid State Drive', CategoryId: '100',    
+            AvilableQty: 50, ReorderQty: 30    
+        },
+        {    
+            ProductID: '2', ProductName: 'Monitor', CategoryId: '101',    
+            AvilableQty: 20, ReorderQty: 10    
+        },
+        {    
+            ProductID: '3', ProductName: 'LED Display Monitor', CategoryId: '100',    
+            AvilableQty: 5, ReorderQty: 10    
+        },
+        {    
+            ProductID: '4', ProductName: 'San Disk 64 GB Pen Drive', CategoryId: '105',    
+            AvilableQty: 35, ReorderQty: 80    
+        }, 
+        {    
+            ProductID: '5', ProductName: 'Think Pad Ultra Dock', CategoryId: '105',    
+            AvilableQty: 25, ReorderQty: 20    
+        },  
+    ];    
+}    
+Attribute Directives
+If you have used HTML you must have use different element attributes like style, val, class, id, etc. You can change element's behavior using setting values for these attributes.
+
+Angular Attribute Directives change behavior or appearance of an element, component or another directive. It is a class with Directive decorator. Where you configure what behavior should be a trigger. ngClass, ngModel, ngStyle, ngSwitch are examples of attributes built into the angular framework.
+
+In Angular Component tutorial, Products component is created. It displays list of products and it's details. Let's use same Products component to use Attribute Directive which will show products in the red background if AvilableQty is less than ReOrderQty.
+
+Add ngStyle Attribute Directive to table column AvilableQty to display it in Red background if it values less than ReOrderQry.
+
+example of Angular Attribute directive
+The following code which changes behavior of AvilableQty column value in the red if it values less than ReOrderQty.
+
+<div class="container">
+<br />
+<h2> <a href="http://geeksarray.com">Geeks Product List</a></h2>
+<div class="table-responsive">
+<table class="table table-striped" *ngIf='products && products.length'>
+    <thead class="thead-dark">
+        <tr>
+            <th>ProductID</th>
+            <th>ProductName</th>
+            <th>CategoryId</th>
+            <th>AvilableQty</th>
+            <th>ReorderQty</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor='let product of products'>
+            <td>{{product.ProductID}}</td>
+            <td>{{product.ProductName}}</td>
+            <td>{{product.CategoryId}}</td>            
+            <td [ngStyle]="{'background-color': product.AvilableQty
+> product.ReorderQty ? '' : 'red' }">{{product.AvilableQty}}</td>
+            <td>{{product.ReorderQty}}</td>
+        </tr>
+    </tbody>
+</table>
+<div>
+</div>
+</div>
+This Products component renders as
+
+Angular Attribute directive
+
+Angular Directives: Attribute vs Structural
+Attribute directives - Components has its own HTML and Styles so only one Attribute directive can be used with host element whereas Structural directives are applied to template so multiple structural directives can be used with template.
+Attribute directives are used to change the appearance or behavior of component, elements or different directive. Structural directive used to change HTML layout, DOM, adding or removing angular elements runtime.
+Examples of built-in Attribute Directive are ngStyle, ngClass.
+Example of Structural attribute are *ngIf, *ngSwitch, *ngFor.
+
+=====================================================

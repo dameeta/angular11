@@ -1,0 +1,68 @@
+step 1: ng n inputoutputdecoratorexample
+cd inputoutputdecoratorexample
+step 2: ng g c studentcomponent
+step 3: studentcomponent.html
+<button (click)="sendValues()"> Send Data </button> 
+
+step4:studentcomponent.ts
+
+import { Component, Input, Output,OnInit, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-studentcomponent',
+  templateUrl: './studentcomponent.component.html',
+  styleUrls: ['./studentcomponent.component.css']
+})
+export class StudentcomponentComponent implements OnInit {
+  @Input()
+  myinputMsg!: string;
+  @Output() myOutput:EventEmitter<string>= new EventEmitter(); 
+ outputMessage:string="I am child component." 
+  constructor() { }
+
+  ngOnInit(): void {
+    console.log(this.myinputMsg);
+
+  }
+  sendValues(){ 
+    this.myOutput.emit(this.outputMessage); 
+     } 
+
+}
+===========================================
+
+Step5:
+app.component.ts
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'inputoutputdecoratorexample';
+  myInputMessage:string = "I am parent component!!!!";
+  GetChildData(data:any){ 
+    console.log(data); 
+    8. }
+}
+=============================
+step 6: 
+app.component.html
+<div style="text-align: center;">
+<h1>Welcome to {{title}}</h1>
+<h2>
+  I am a parent component
+</h2>
+</div>
+<div>
+<app-studentcomponent
+ [myinputMsg]="myInputMessage" (myOutput) ="GetChildData($event)"></app-studentcomponent></div>
+========================================
+step 7:ng serve
+
+
+
+

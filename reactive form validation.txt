@@ -264,4 +264,3 @@ Let's start the project using the following command:
 npm start
 
  
-
