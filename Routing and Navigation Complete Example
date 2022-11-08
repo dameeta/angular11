@@ -1,0 +1,631 @@
+Routing and Navigation Complete Example
+Now we create a complete example using routing and navigation. We will create a book library. The functionality will be to display book, add books, update and remove books from the library. Find the example step by step.
+1. Project Structure
+Find the project structure.
+angular-demo
+|
+|--src
+|   |
+|   |--app 
+|   |   |
+|   |   |--services
+|   |   |   |
+|   |   |   |--book.service.ts
+|   |   |   |--book.ts
+|   |   |   |--mock-books.ts   
+|   |   |
+|   |   |--home
+|   |   |   |
+|   |   |   |--home.component.ts
+|   |	|   |--home.component.html
+|   |	|   |--home.component.css
+|   |   |   |--view-detail.component.ts
+|   |	|   |--view-detail.component.html
+|   |	|   |--view-detail.component.css
+|   |   | 
+|   |   |--add-book    
+|   |   |   |
+|   |   |   |--add-book.component.ts
+|   |   |   |--add-book.component.html
+|   |   |   |--add-book.component.css
+|   |   |
+|   |   |--manage-book
+|   |   |   |
+|   |   |   |--manage-book.component.ts
+|   |	|   |--manage-book.component.html
+|   |	|   |--manage-book.component.css
+|   |   |   |--update-book.component.ts
+|   |	|   |--update-book.component.html
+|   |	|   |--update-book.component.css
+|   |   |
+|   |   |--app.component.ts
+|   |   |--app.component.html
+|   |   |--app.component.css
+|   |   |--page-not-found.component.ts
+|   |   |--app-routing.module.ts 
+|   |   |--app.module.ts 
+|   | 
+|   |--main.ts
+|   |--index.html
+|   |--styles.css
+|
+|--node_modules
+|--package.json 
+
+
+2. Add <base href> in index.html
+<base> tag in HTML is used to define base URL for relative links. <base> is used within <head> tag. In Angular router it is used to compose navigation URLs. We are adding <base> tag in index.html as follows.
+<base href="/"> Find the index.html used in our example.
+index.html
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Angular Demo</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <app-root>Loading...</app-root>
+</body>
+</html> 
+3. Create Routing Module and Application Module
+We will create module now. To configure routing and navigation we should create a separate module file and that should be imported in main application module file. Creating separate module file will help us to configure link guarding i.e. protecting link navigation in some scenario, for example application using authentication in which some links are allowed only after login. Now find the routing modules.
+app-routing.module.ts
+import { NgModule }      from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+import { PageNotFoundComponent }  from './page-not-found.component';
+import { HomeComponent }  from './home/home.component';
+import { ViewDetailComponent }  from './home/view-detail.component';
+import { AddBookComponent }  from './add-book/add-book.component';
+import { UpdateBookComponent }  from './manage-book/update-book.component';
+import { ManageBookComponent }  from './manage-book/manage-book.component';
+
+const routes: Routes = [
+        { path: 'home', component: HomeComponent },
+	{ path: 'view-detail/:id', component: ViewDetailComponent },		  
+	{ path: 'add-book', component: AddBookComponent },
+	{ path: 'manage-book', component: ManageBookComponent },
+	{ path: 'update-book/:id', component: UpdateBookComponent }, 
+	{ path: '', redirectTo: '/home', pathMatch: 'full' },
+	{ path: '**', component: PageNotFoundComponent }
+];
+@NgModule({
+  imports: [ RouterModule.forRoot(routes) ],
+  exports: [ RouterModule ]
+})
+export class AppRoutingModule{ } Now find the application modules. Routing module will be imported within application module. Here importing sequence is important and we should import it at the last. app.module.ts
+import { NgModule }   from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule }   from '@angular/forms';
+
+import { AppComponent }  from './app.component';
+import { PageNotFoundComponent }  from './page-not-found.component';
+import { HomeComponent }  from './home/home.component';
+import { ViewDetailComponent }  from './home/view-detail.component';
+import { AddBookComponent }  from './add-book/add-book.component';
+import { UpdateBookComponent }  from './manage-book/update-book.component';
+import { ManageBookComponent }  from './manage-book/manage-book.component';
+import { AppRoutingModule }  from './app-routing.module';
+
+@NgModule({
+  imports: [     
+          BrowserModule,
+	  FormsModule,
+	  AppRoutingModule
+  ],
+  declarations: [
+          AppComponent, 
+	  PageNotFoundComponent,
+	  HomeComponent,
+	  ViewDetailComponent,
+	  AddBookComponent,
+	  ManageBookComponent,
+	  UpdateBookComponent
+  ],
+  providers: [ ],
+  bootstrap: [ AppComponent ]
+})
+export class AppModule { } We can also use routing module and application module in single module file.
+app.module.ts
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule }   from '@angular/forms';
+import { NgModule }      from '@angular/core';
+import { RouterModule }   from '@angular/router';
+
+import { AppComponent }  from './app.component';
+import { PageNotFoundComponent }  from './page-not-found.component';
+import { HomeComponent }  from './home/home.component';
+import { ViewDetailComponent }  from './home/view-detail.component';
+import { AddBookComponent }  from './add-book/add-book.component';
+import { UpdateBookComponent }  from './manage-book/update-book.component';
+import { ManageBookComponent }  from './manage-book/manage-book.component';
+
+@NgModule({
+  imports: [     
+           BrowserModule,
+	   FormsModule,
+	   RouterModule.forRoot([
+		  {
+			path: 'home',
+			component: HomeComponent
+		  },
+		  {
+			path: 'view-detail/:id',
+			component: ViewDetailComponent
+		  },		  
+		  {
+			path: 'add-book',
+			component: AddBookComponent
+		  },
+		  {
+			path: 'manage-book',
+			component: ManageBookComponent
+		  },
+		  {
+			path: 'update-book/:id',
+			component: UpdateBookComponent
+		  },
+		  {
+			path: '**',
+			component: PageNotFoundComponent 
+		  },		  
+		  {
+		    path: '',
+		    redirectTo: '/home',
+		    pathMatch: 'full'
+		  }
+		])
+  ],
+  declarations: [
+        AppComponent, 
+	PageNotFoundComponent,
+	HomeComponent,
+	ViewDetailComponent,
+	AddBookComponent,
+	ManageBookComponent,
+	UpdateBookComponent
+  ],
+  providers: [
+  ],
+  bootstrap: [
+        AppComponent
+  ]
+})
+export class AppModule { } 
+4. Create Menu
+Let us start to create links. We will create menu for our application.
+app.component.html
+<h1>{{title}}</h1>
+<nav [ngClass] = "'menu'">
+   <a routerLink="/home" routerLinkActive="active-link">Home</a> | 
+   <a routerLink="/add-book" routerLinkActive="active-link">Add Book</a> | 
+   <a routerLink="/manage-book" routerLinkActive="active-link">Manage Book</a>
+</nav>  
+<div>	
+  <router-outlet></router-outlet>	
+</div> <router-outlet> will act as our container where all path bound with routerLink will open.
+app.component.ts
+import { Component } from '@angular/core';
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html', 
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent { 
+  title = "Book Library"
+} app.component.css
+h1 {
+    color: #999;
+    margin-bottom: 10;
+    font-size: 2em;
+}
+.menu {
+    display: inline-block;
+    background-color: #eee;
+    border-radius: 4px;
+
+}
+.active-link {
+    color: #F20B22;
+} 
+5. Create Service
+We are creating a service that will contain methods to fetch, add and remove books.
+book.service.ts
+import { Injectable } from '@angular/core';
+import { Book } from './book';
+import { BOOKS } from './mock-books';
+
+@Injectable({
+    providedIn: 'root'
+})
+export class BookService {
+    getBooks(): Promise<Book[]> {
+        return Promise.resolve(BOOKS);
+    }
+    addBook(book:Book): void {
+		this.getBooks().then(books => {
+		     let maxIndex = books.length - 1;
+		     let bookWithMaxIndex = books[maxIndex];
+		     book.id = bookWithMaxIndex.id + 1;
+		     books.push(book);}
+		);
+    }
+    getBook(id: number): Promise<Book> {
+        return this.getBooks()
+            .then(books => books.find(book => book.id === id));
+    }
+    deleteBook(id: number): void {
+		this.getBooks().then(books => {
+		    let book = books.find(ob => ob.id === id);
+                    let bookIndex = books.indexOf(book);
+                    books.splice(bookIndex, 1);}
+		);
+    }
+} book.ts
+export class Book {
+   id: number;
+   name: string;
+   price: string;
+   description: string;
+   constructor() { 
+   }
+} mock-books.ts
+import { Book } from './book';
+
+export var BOOKS: Book[] = [
+  {"id": 1, "name": "Core Java", "price": "25.50", "description": "Core Java Tutorials"},
+  {"id": 2, "name": "Angular", "price": "15.20", "description": "Learn Angular"},
+  {"id": 3, "name": "Hibernate", "price": "13.50", "description": "Hibernate Examples"},
+  {"id": 4, "name": "TypeScript", "price": "26.40", "description": "TypeScript Tutorials"}
+]; 
+6. Display Contents
+Here we will create component that will display the details of books.
+home.component.ts
+import { Component, OnInit } from '@angular/core';
+
+import { Book } from '../services/book';
+import { BookService } from '../services/book.service';
+
+@Component({
+    selector: 'home-app',
+    templateUrl: './home.component.html',
+    styleUrls: ['./home.component.css']
+})
+export class HomeComponent implements OnInit { 
+    books: Book[];
+    constructor(private bookService: BookService) { }
+    getBooks(): void {
+        this.bookService.getBooks().then(books => this.books = books);
+    }
+    ngOnInit(): void {
+        this.getBooks();
+    }				
+} home.component.html
+<h2>Book Details</h2>
+<ul [ngClass] = "'home'">
+  <li *ngFor="let book of books" >
+        Id: {{book.id}}, Name: {{book.name}} | 
+	<a [routerLink]="['/view-detail', book.id]">View Detail</a>
+  </li>
+</ul> home.component.css
+h2 {
+  font-size: 1.5em;
+  margin-top: 10;
+}
+.home {
+  padding: 0;	
+}
+.home  a{
+  margin-top: 10px;
+  display: inline-block;
+  background-color: #eee;
+  text-decoration: none;
+} Find the print screen.
+Angular Routing and Navigation Example
+When we click on "View Detail", then view-detail/:id route is called where id will be book id. To handle the view detail we have the following component.
+view-detail.component.ts
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, Params } from '@angular/router';
+import { Location } from '@angular/common';
+import { switchMap } from 'rxjs/operators';
+
+import { Book } from '../services/book';
+import { BookService } from '../services/book.service';
+
+@Component({
+    selector: 'view-detail-app',
+    templateUrl: './view-detail.component.html',
+    styleUrls: ['./view-detail.component.css']
+})
+export class ViewDetailComponent implements OnInit {
+    book: Book = new Book();
+    constructor(private route: ActivatedRoute,
+        private router: Router,
+        private bookService: BookService,
+        private location: Location) { }
+    ngOnInit(): void {
+        this.route.params.pipe(
+            switchMap((params: Params) => this.bookService.getBook(+params['id']))
+        ).subscribe(book => this.book = book);
+    }
+    goBack(): void {
+        this.location.back();
+    }
+    updateBook(id: number): void {
+        this.router.navigate(['/update-book', id]);
+    }
+}view-detail.component.html
+<h2>View Detail</h2>
+<ul [ngClass] = "'view-detail'">
+  <li>
+    Id: {{book.id}}
+  </li>
+  <li>
+    Name: {{book.name}}
+  </li>
+  <li>
+    Price: {{book.price}}
+  </li>
+  <li>
+    Description: {{book.description}}
+  </li>  
+</ul>
+<div>
+ <button (click)="goBack()">Go Back</button>
+ <button (click)="updateBook(book.id)">Update</button>
+</div>
+<div>
+ <a [routerLink]="['/buy-book']">Buy Book</a>
+</div> view-detail.component.css
+h2 {
+  font-size: 1.5em;
+  margin-top: 10;
+}
+.view-detail {
+  padding: 0;	
+}
+button {
+  margin-top: 10px;
+  background-color: #eee;
+  border: none;
+  padding: 3px 10px;
+  cursor: pointer; cursor: hand;
+}
+a {
+  margin-top: 15px;
+  display: inline-block;
+  background-color: #eee;
+  text-decoration: none;
+} Find the print screen.
+Angular Routing and Navigation Example
+7. Add Contents
+Find the component that will add books in library.
+add-book.component.ts
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { Book } from '../services/book';
+import { BookService } from '../services/book.service';
+
+@Component({
+    selector: 'add-book-app',
+    templateUrl: './add-book.component.html',
+    styleUrls: ['./add-book.component.css']
+})
+export class AddBookComponent implements OnInit { 
+    books: Book[];
+    book: Book = new Book();
+    constructor(private router: Router,
+	        private bookService: BookService) { }
+    getBooks(): void {
+        this.bookService.getBooks().then(books => this.books = books);
+    }
+    ngOnInit(): void {
+        this.getBooks();
+    }
+    addBook(): void {
+	this.bookService.addBook(this.book);
+        this.router.navigate(['/home']);
+    }	
+} We are using two-way binding using ngModel.
+add-book.component.html
+<h2>Add Book</h2>
+<div>
+ <div>
+    <label>Name: </label>
+    <input [(ngModel)]="book.name" />
+ </div>	
+ <div>
+    <label>Price: </label>
+    <input [(ngModel)]="book.price" />
+ </div>	
+ <div>
+    <label>Short Description: </label>
+    <input [(ngModel)]="book.description" />
+ </div>	 
+ <div>
+    <button (click)="addBook()">Add</button>
+ </div>
+</div>  add-book.component.css
+h2 {
+  font-size: 1.5em;
+  margin-top: 10;
+}
+label {
+  display: inline-block;
+  width: 8em;
+  color: #607D8B;
+}
+input {
+  height: 1.5em;
+  font-size: 1em;
+}
+button {
+  margin-top: 20px;
+  background-color: #eee;
+  border: none;
+  padding: 3px 10px;
+  cursor: pointer; cursor: hand;
+} When we run the application we will get following output.
+Angular Routing and Navigation Example
+Enter the book detail and click on "Add", book will be added and page will be navigated to /home route.
+8. Update and Remove Contents
+Find the component to manage the books. The following component will display books details and links to update and remove the books.
+manage-book.component.ts
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { Book } from '../services/book';
+import { BookService } from '../services/book.service';
+
+@Component({
+    selector: 'manage-book-app',
+    templateUrl: './manage-book.component.html',
+    styleUrls: ['./manage-book.component.css']
+})
+export class ManageBookComponent implements OnInit { 
+    books: Book[];
+    book: Book = new Book();
+    constructor(private router: Router,
+	        private bookService: BookService) { }
+    getBooks(): void {
+        this.bookService.getBooks().then(books => this.books = books);
+    }
+    ngOnInit(): void {
+        this.getBooks();
+    }
+    updateBook(id:number): void {
+	this.router.navigate(['/update-book', id]);
+    }
+    deleteBook(id:number): void {
+	this.bookService.deleteBook(id);
+    }
+} manage-book.component.html
+<h2>Manage Book</h2>
+<ul [ngClass] = "'manage-book'">
+  <li *ngFor="let book of books" >
+          Id: {{book.id}}, Name = {{book.name}}
+	  <button (click)="updateBook(book.id)">Update</button>
+	  <button (click)="deleteBook(book.id)">Remove</button>
+  </li>
+</ul> manage-book.component.css
+h2 {
+  font-size: 1.5em;
+  margin-top: 10;
+}
+.manage-book {
+  padding: 0;	
+}
+button {
+  margin-top: 20px;
+  background-color: #eee;
+  border: none;
+  padding: 3px 10px;
+  cursor: pointer; cursor: hand;
+} Find the print screen.
+Angular Routing and Navigation Example
+When we click on "Remove" button then that book will be removed from library. When we click on "Update" button, the book id will passed and router will navigate using following code.
+updateBook(id:number): void {
+	this.router.navigate(['/update-book', id]);
+} The following component will be displayed to update the book.
+update-book.component.ts
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Location } from '@angular/common';
+import { switchMap } from 'rxjs/operators';
+
+import { Book } from '../services/book';
+import { BookService } from '../services/book.service';
+
+@Component({
+    selector: 'update-book-app',
+    templateUrl: './update-book.component.html',
+    styleUrls: ['./update-book.component.css']
+})
+export class UpdateBookComponent implements OnInit {
+    book: Book = new Book();
+    constructor(private route: ActivatedRoute,
+        private bookService: BookService,
+        private location: Location) { }
+    ngOnInit(): void {
+        this.route.params.pipe(
+            switchMap((params: Params) => this.bookService.getBook(+params['id']))
+        ).subscribe(book => this.book = book);
+    }
+    goBack(): void {
+        this.location.back();
+    }
+} update-book.component.html
+<h2>Update Book</h2>
+<div>
+ <div>
+    <label>Id: </label> {{book.id}}
+ </div>	
+ <div>
+    <label>Name: </label>
+    <input [(ngModel)]="book.name" />
+ </div>	
+ <div>
+    <label>Price: </label>
+    <input [(ngModel)]="book.price" />
+ </div>	
+ <div>
+    <label>Short Description: </label>
+    <input [(ngModel)]="book.description" />
+ </div>	 
+ <div> 
+    <button (click)="goBack()">Go Back</button>
+ </div> 
+</div>  update-book.component.css
+h2 {
+  font-size: 1.5em;
+  margin-top: 10;
+}
+label {
+  display: inline-block;
+  width: 8em;
+  color: #607D8B;
+}
+input {
+  height: 1.5em;
+  font-size: 1em;
+}
+button {
+  margin-top: 20px;
+  background-color: #eee;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer; cursor: hand;
+} Find the print screen.
+Angular Routing and Navigation Example
+9. "404 Not Found" Handling
+In case for a given path there is no mapping component configured in module, then to handle "404 Not Found" exception, we have defined a route mapping in our module as follows.
+{ path: '**', component: PageNotFoundComponent } Find the component.
+page-not-found.component.ts
+import { Component } from '@angular/core';
+import { Location } from '@angular/common';
+
+@Component({
+  template: `<h2>Page Not Found.</h2>
+             <div>
+                <button (click)="goBack()">Go Back</button>
+	     </div>
+            `
+})
+export class PageNotFoundComponent {
+	constructor(private location: Location) { }
+	goBack(): void {
+            this.location.back();
+        }
+} To test it we have a fake link "Buy Book" in view-detail.component.html as given below
+<a [routerLink]="['/buy-book']">Buy Book</a> /buy-book has no corresponding component configured in routing module, so it will be handled by PageNotFoundComponent that will display our defined message. Find the print screen.
+Angular Routing and Navigation Example
+Run Application
+To run the application, find the steps.
+1. Download source code using download link given below on this page.
+2. Use downloaded src in your Angular CLI application. To install Angular CLI, find the link.
+3. Run ng serve using command prompt.
+4. Access the URL
