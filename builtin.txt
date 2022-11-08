@@ -1,0 +1,60 @@
+Service Name
+Description
+$anchorScroll
+Provides capability to scroll to page anchor specified in $location.hash()
+$animate
+This service exposes a series of DOM utility methods that provide support for animation hooks.
+$animateCss
+By default, only when the ngAnimate is included, then this service will perform animations.
+$cacheFactory
+Factory that constructs Cache objects, put and retrieve key-value pairs and give it’s access to other services.
+$templateCache
+The first time a template is used, it is loaded in the template cache for quick retrieval.
+$compile
+Compiles an HTML string or DOM into a template and produces a template function, which can then be used to link scope and the template together.
+$controller
+This is responsible for instantiating angular controller components.
+$document
+Specifies a jQuery-wrapped reference to window.document element.
+$exceptionHandler
+Any uncaught exception in angular expressions is delegated to this service. The default implementation simply delegates to $log.error which logs it into the browser console.
+$filter
+Filters are used for formatting data displayed to the user.
+$httpParamSerializer
+Default $http params serializer that converts object to string.
+$httpParamSerializerJQLike
+Alternative $http params serializer that follows jQuery’s param() method logic. The serializer will also sort the params alphabetically.
+$http
+This service facilitates communication with the remote HTTP servers via the browser’s XMLHttpRequest object or via JSONP.
+$xhrFactory
+Factory function used to create XMLHttpRequest objects.
+$httpBackend
+Used for dealing with browser incompatibilities.
+$interpolate
+Compiles a string with markup into an interpolation function. This service is used by the HTML $compile service for data binding.
+$interval
+Angular’s wrapper for window.setInterval.
+$locale
+Provides localization rules for various Angular components.
+$location
+It parses the URL in the browser address bar and makes the URL available to your application. Changes to the URL in the address bar are reflected into $location service and changes to $location are reflected into the browser address bar.
+$log
+Console logger.
+$parse
+Converts Angular expression into a function.
+$q
+Helps you run functions asynchronously, and use their return values (or errors) when they are done processing.
+$rootElement
+The root element of Angular application.
+$rootScope
+Scopes provide separation between the model and the view. This is for root scope. Every application has a single root scope.
+$sceDelegate
+Used by the $sce in backend.
+$sce
+provides Strict Contextual Escaping services to AngularJS.
+$templateRequest
+It runs security checks then downloads the provided template using $http and, upon success, stores the contents inside of $templateCache.
+$timeout
+Angular’s wrapper for window.setTimeout()
+$window
+A reference to the browser’s window object. While window is globally available in JavaScript, it causes testability problems, because it is a global variable. In angular we always refer to it through the $window service, so it may be overridden, removed or mocked for testing.
