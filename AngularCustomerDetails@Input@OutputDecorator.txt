@@ -120,11 +120,12 @@ showDetails(customer:Customer){
 update(customer:Customer){
   console.log(customer)
   var cust = this.customers.find(e=>e.customerNo==customer.customerNo)
-  Object.assign(cust,customer)
+  Object.assign(customer,customer)
   alert("Customer Saved")
 }
 }
 =====================================================
+npm install protractor
 
 app.module.ts
 import { NgModule } from '@angular/core';
